@@ -1308,6 +1308,14 @@ export class EmployeesComponent implements OnInit {
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>El resultado será como el de la figura siguiente.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/listadoEmpleadoConLinks.png" alt="listadoEmpleadoConLinks.png">
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="trueimplementar-el-controlador-de-la-parte-de-detalle"><a class="anchor" href="#trueimplementar-el-controlador-de-la-parte-de-detalle"></a>2.12. Implementar el controlador de la parte de detalle</h3>
@@ -1363,16 +1371,34 @@ export class EmployeeComponent implements OnInit {
 </div>
 <div class="sect2">
 <h3 id="trueimplementar-la-vista-de-la-parte-de-detalle"><a class="anchor" href="#trueimplementar-la-vista-de-la-parte-de-detalle"></a>2.13. Implementar la vista de la parte de detalle</h3>
+<div class="paragraph">
+<p>La vista presenta los valores almacenados en la variable de instancia <code>employee</code>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-html" data-lang="html">&lt;div class="row"&gt;
   &lt;div class="col"&gt;
-    &lt;h2&gt;
-      {{ heroe.nombre }} &lt;small&gt;{{ heroe.aparicion | date: "yyyy" }}&lt;/small&gt;
-    &lt;/h2&gt;
-    &lt;p&gt;{{ heroe.bio }}&lt;/p&gt;
+    &lt;h2&gt;{{ employee.name.first }} {{ employee.name.last }}&lt;/h2&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt;p&gt;Company: {{ employee.company }}&lt;/p&gt;
+    &lt;p&gt;Contact at: {{ employee.email }}&lt;/p&gt;
   &lt;/div&gt;
 &lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Uso de la interpolación para la presentación de datos</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>El resultado de acceso a un detalle será similar a este.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/DetalleEmpleado.png" alt="DetalleEmpleado.png">
 </div>
 </div>
 </div>
@@ -1628,7 +1654,7 @@ export class CountryComponent implements OnInit {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-07-01 23:30:09 CEST
+Last updated 2020-07-01 23:40:20 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
