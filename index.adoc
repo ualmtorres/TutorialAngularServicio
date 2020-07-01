@@ -1,0 +1,876 @@
+////
+NO CAMBIAR!!
+Codificación, idioma, tabla de contenidos, tipo de documento
+////
+:encoding: utf-8
+:lang: es
+:toc: right
+:toc-title: Tabla de contenidos
+:doctype: book
+:imagesdir: ./images
+:linkattrs:
+:icons: font
+
+
+////
+Nombre y título del trabajo
+////
+# Aplicación de ejemplo en Angular
+Servicio de las Tecnologías de la Información y las Comunicaciones - Universidad de Almería
+
+
+// NO CAMBIAR!! (Entrar en modo no numerado de apartados)
+:numbered!: 
+
+
+image:logocloudstic.png[]
+
+[abstract]
+== Resumen
+Angular ....
+
+////
+***************************************************
+////
+.Objetivos
+
+* Conocer ...
+* Aprender a ...
+* Entender ...
+
+
+// Entrar en modo numerado de apartados
+:numbered:
+
+////
+***************************************************
+////
+
+## Creación de los elementos básicos del proyecto
+
+El proyecto que vamos a crear está formado iniciamente por dos páginas (`home` y `about`) e incluirá una barra de navegación en la parte superior. Usaremos también Bootstrap, lo que le dará un aspecto similar al de la figura:
+
+image::inicial.png[]
+
+Desde una terminal comenzamos creando el proyecto con el CLI de Angular
+
+[source, bash]
+----
+ng new miapp <1>
+cd miapp
+----
+
+<1> Nos pedirá si queremos añadir enrutado Angular  y el tipo de formato de hojas de esilo que queremos usar. Dejamos las opciones por defecto (No usar enrutado Angular y CSS como formato de hojas de estilo)
+
+.Opciones en la creación del proyecto
+****
+[source,bash]
+----
+ng new miapp
+? Would you like to add Angular routing? No
+? Which stylesheet format would you like to use? (Use arrow keys)
+❯ CSS 
+  SCSS   [ https://sass-lang.com/documentation/syntax#scss                ] 
+  Sass   [ https://sass-lang.com/documentation/syntax#the-indented-syntax ] 
+  Less   [ http://lesscss.org                                             ] 
+  Stylus [ http://stylus-lang.com                                         ] 
+----
+****
+
+
+### Instalación de Bootstrap
+
+Para el uso de Angular podemos incluir el CSS en la cabecera y los JS al final del archivo `index.html`, que es una de las formas más populares de usarlo. Para aprender a usarlo como un paquete más del proyecto lo haremos de la forma siguiente.
+
+En primer lugar, instalamos los paquetes necesarios (`bootstrap`, `jquery` y `@popperjs/core`) y usaremos la opción `--save` para guardar sus dependencias en el archivo `package.json` de forma que se instalen al clonar el proyecto.
+
+[source, bash]
+----
+npm install bootstrap jquery @popperjs/core --save
+----
+
+Incluir en `angular.json` las referencias al CSS y los JS. Así, no hace falta cargar el CSS y los JS en el HTML.
+
+[source, TypeScript]
+----
+...
+            "styles": [
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
+            ]
+...
+----
+
+### Creación de los componentes
+
+Organizaremos los componentes de la aplicación en carpetas:
+
+* Una carpeta `components` para los componentes.
+* Una carpeta `componentes/shared` para componentes compartidos (p.e. la barra de navegación)
+* Una carpeta `services` para servicios que veremos más adelante cuando creemos el primer servicio.
+
+Creamos los componentes con el CLI de Angular
+
+[source, bash]
+----
+ng generate component components/home
+ng generate component components/about
+ng generate component components/shared/navbar
+----
+
+.Abreviaturas en el CLI de Angular
+****
+El CLI de Angular permite abreviaturas (`g` para `generate`, `c` para `component`, ...). 
+
+Los componentes anteriores también se podrían haber creado usando la forma abreviada de esta forma:
+
+[source, bash]
+----
+ng g c components/home
+ng g c components/about
+ng g c components/shared/navbar
+----
+****
+
+[NOTE]
+====
+Los componentes generados son añadidos de forma automática al array `declarations` en `app.module.ts`.
+
+[source, bash]
+----
+...
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent, <1>
+    AboutComponent,
+    NavbarComponent
+  ],
+...
+----
+====
+<1> Componentes incoporados
+
+### Creación de la página `home`
+
+Sustituimos el contenido de `components/home.component.html` por un https://getbootstrap.com/docs/4.5/components/jumbotron/[jumbotron] de Bootstrap.
+
+[source, html]
+----
+<div class="jumbotron">
+  <h1 class="display-4">Hello, world!</h1>
+  <p class="lead">
+    This is a simple hero unit, a simple jumbotron-style component for calling
+    extra attention to featured content or information.
+  </p>
+  <hr class="my-4" />
+  <p>
+    It uses utility classes for typography and spacing to space content out
+    within the larger container.
+  </p>
+  <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+</div>
+----
+
+### Creación de la barra de navegación
+
+Sustituimos el contenido de `components/shared/navbar.html` por un https://getbootstrap.com/docs/4.5/components/navbar/#nav[navbar] sin cuadro de búsqueda de Bootstrap. En las opciones de menú dejamos sólo dos elementos (uno para `home` y otro para `about`)
+
+[source, html]
+----
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home</a> <1>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a> <2>
+      </li>
+    </ul>
+  </div>
+</nav>
+----
+<1> Elemento `Home` al que se ha eliminado el `<span>` que trae por defecto el código del `navbar`
+<2> Elemento `About`
+
+### Enrutado
+
+Las rutas permitidas en nuestra aplicación estarán definidas en el archivo `app.routes.ts`. Inicialmente, definiremos una ruta para el `home` y otra para el `about`. Más adelante añadiremos más rutas a este archivo.
+
+[source, typescript]
+----
+import { Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { AboutComponent } from './components/about/about.component';
+
+export const ROUTES: Routes = [
+  { path: 'home', component: HomeComponent }, <1>
+  { path: 'about', component: AboutComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'home' }, <2>
+  { path: '**', pathMatch: 'full', redirectTo: 'home' }, <3>
+];
+
+----
+<1> Para cada ruta se define un par formado por el `path` a añadir a la URL de la aplicación junto a su componente asociado.
+<2> Redirigir a `home` la ruta vacía
+<3> Redirigir a `home` cualquier otra ruta
+
+#### Importación del archivo de rutas
+
+Importar rutas en `app.module.ts`
+
+[source, typescript]
+----
+...
+  imports: [BrowserModule, RouterModule.forRoot(ROUTES, { useHash: true })],
+...
+----
+
+### Modificar la página de la aplicación
+
+En el `app.component.html` dejamos sólo los selectores de los componentes que queremos que estén en cada página (la barra de navegación y el componente seleccionado desde la barra de navegación).
+
+[source,html]
+----
+<app-navbar></app-navbar> <1>
+<div class="container m-5">
+  <router-outlet></router-outlet> <2>
+</div>
+----
+<1> Componente de la barra de navegación
+<2> Marcador que incluye de forma dinámica el componente de la ruta seleccionada
+
+### Incluir las rutas en la barra de navegación 
+
+Para cada elemento de la barra de navegación incluiremos su ruta correspondiente definida en `app.routes.ts`
+
+[source, html]
+----
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item" routerLinkActive="active"> <1>
+        <a class="nav-link" routerLink="home">Home</a> <2>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="about">About</a> <3>
+      </li>
+    </ul>
+  </div>
+</nav>
+----
+<1> Dejar la clase sólo a `nav-item`. El estilo `active` quedará determinado 
+en función de la ruta seleccionada
+<2> `routerLink` se establece con el `path` definido en `app.routes.ts`
+<3> Path de la ruta `about`
+
+### Servir la aplicación
+
+Desde el directorio de la aplicación con `ng serve --open` se ejecuta la aplicación y se abre en un navegador.
+
+[NOTE]
+====
+La aplicación queda en modo de _live reload_. Cualquier cambio que se realice sobre el código se verá de forma inmediata en el navegador.
+====
+
+image::inicial.png[]
+
+## Creación de un servicio con datos en memoria
+
+Al comenzar a desarrollar una aplicación basada en servicios, como puede ser una aplicación que interactúe con una base de datos a través de una API REST, es frecuente no contar con la API a la hora de desarrollar el frontend. En estas situaciones podemos simular el funcionamiento del servicio generando unos datos de prueba (p.e. en JSON) y desarrollar el frontend a partir de esos datos de prueba. Una vez desarrollada la API REST se podrán cambiar los servicios para que interactúen con la base de datos en lugar de los datos de prueba.
+
+### Creación del servicio
+
+Los componentes de Angular no deben interactuar directamente con los datos. Los componentes deben dedicase a presentar los datos y delegar a los servicios el acceso a los datos.
+
+Los servicios se inyectarán en los componentes que quieran hacer uso de ellos.
+
+[source, bash]
+----
+ng generate service services/employees <1>
+----
+<1> Guardaremos los servicios en una carpeta `services`
+
+Los servicios tienen que ser añadidos al array `providers` en `app.module.ts`
+
+[source,typescript]
+----
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home/home.component';
+import { AboutComponent } from './components/about/about.component';
+import { NavbarComponent } from './components/shared/navbar/navbar.component';
+import { RouterModule } from '@angular/router';
+import { ROUTES } from './app.routes';
+import { EmployeesService } from './services/employees.service'; <1>
+
+@NgModule({
+  declarations: [AppComponent, HomeComponent, AboutComponent, NavbarComponent],
+  imports: [BrowserModule, RouterModule.forRoot(ROUTES, { useHash: true })],
+  providers: [EmployeesService], <2>
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+----
+<1> Archivo del servicio
+<2> Servicio añadido al array `providers`
+
+### Implementación del servicio
+
+Para crear el _mock_ y evitar la interacción con una base de datos crearemos un array donde guardaremos los datos en JSON, tal y como los devolvería la API que está pendiente de crear.
+
+[source, typescript]
+----
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EmployeesService {
+  employees: any[] = [ <1>
+    {
+      id: 0,
+      isActive: false,
+      age: 39,
+      name: {
+        first: 'Patsy',
+        last: 'Moore',
+      },
+      company: 'ZYTREX',
+      email: 'patsy.moore@zytrex.net',
+      favoriteFruit: 'strawberry',
+    },
+    {
+      id: 1,
+      isActive: true,
+      age: 37,
+      name: {
+        first: 'Valencia',
+        last: 'Flores',
+      },
+      company: 'AQUAMATE',
+      email: 'valencia.flores@aquamate.us',
+      favoriteFruit: 'banana',
+    },
+    {
+      id: 2,
+      isActive: false,
+      age: 37,
+      name: {
+        first: 'Leona',
+        last: 'Wyatt',
+      },
+      company: 'SENMAO',
+      email: 'leona.wyatt@senmao.io',
+      favoriteFruit: 'apple',
+    },
+  ];
+  constructor() {}
+
+  getEmployees() { <2>
+    return this.employees;
+  }
+
+  getEmployee(id: number) { <3>
+    return this.employees[id];
+  }
+}
+
+----
+<1> Array con los datos de prueba
+<2> Método que devuelve los datos para la parte maestra
+<3> Método que devuelve los datos para la parte de detalle
+
+### Creación del componente de la parte maestra
+
+Crearemos un componente encargado de gestionar los datos de los empleados y encargarse de su presentación. Se trata de la parte maestra. Más adelante, se podrá seleccionar un empleado de la lista para acceder a sus detalles.
+
+[source, bash]
+----
+ng g c components/employees
+----
+
+### Actualización del archivo de rutas
+
+Añadir una nueva ruta `employees` a `app.routes.ts` asociada al componente de los empleados.
+
+[source, typescript]
+----
+...
+  { path: 'employees', component: EmployeesComponent },
+...
+----
+
+### Actualización de la barra de menús
+
+La lista de empleados será accesible desde el menú. Por tanto, hay que añadir una entrada en la barra de menús que conecte con la ruta definida en el paso anterior.
+
+[source, html]
+----
+...
+    <ul class="navbar-nav">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="home">Home</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active"> <1>
+        <a class="nav-link" routerLink="employees">Employees</a> <2>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="about">About</a>
+      </li>
+    </ul>
+...
+----
+<1> Nueva entrada en la lista de items de la barra de navegación
+<2> Conexión del elemento de menú con la ruta definida en `app.routes.ts`
+
+Con los cambios realizados la aplicación deberá estar como la de la figura. El `router` se encarga de sustituir dinámicamente la prestación del componente seleccionado en la ruta.
+
+image::employeeMenu.png[]
+
+### Implementación del controlador de la parte maestra
+
+Los servicios son los encargados de tratar con los datos. 
+
+.Pasos a seguir en la implementación del controlador
+****
+* El servicio se inyecta en el constructor. 
+* Creamos variables de instancia en el controlador en las que almacenaremos los datos con los que tratan los servicios. 
+* En la implementación del constructor se llamará al servicio para que obtenga los datos y los cargue en las variables de instancia del controlador definidas para ello. 
+* El frontend accederá a las variables de instancia para presentar los datos.
+****
+
+[source, typescript]
+----
+import { Component, OnInit } from '@angular/core';
+import { EmployeesService } from '../../services/employees.service';
+
+@Component({
+  selector: 'app-employees',
+  templateUrl: './employees.component.html',
+  styleUrls: ['./employees.component.css'],
+})
+export class EmployeesComponent implements OnInit {
+  employees: any[] = []; <1>
+
+  constructor(private employeesService: EmployeesService) { <2>
+    this.employees = employeesService.getEmployees(); <3>
+  }
+
+  ngOnInit(): void {}
+}
+----
+<1> Variable de instancia para almacenar los datos recuperados por el servicio
+<2> Inyección del servicio para que esté disponible en la clase
+<3> Almacenamiento en la variable de instancia de los datos recuperados por el servicio 
+
+### Crear la vista de la parte maestra
+
+[source, html]
+----
+<div class="row">
+  <div class="col">
+    <ul>
+      <li *ngFor="let employee of employees"> <1>
+        {{ employee.name.first }} {{ employee.name.last }} <2>
+      </li>
+    </ul>
+  </div>
+</div>
+----
+<1> Iteración sobre la variable de instancia
+<2> Presentación de datos mediante interpolación
+
+El resultado será similar al de la figura.
+
+image::listadoEmpleados.png[]
+
+### Crear el componente para el detalle
+
+Una vez creado la parte maestra pasamos al detalle, que mostrará información asociada al elemento seleccionado en el maestro. Comenzamos creando el componente
+
+[source, bash]
+----
+ng generate component components/employee
+----
+
+### Actualización del archivo de rutas
+
+Añadir una nueva ruta `employee/:id` a `app.routes.ts` asociada al componente del detalle de un empleado.
+
+[source,typescript]
+----
+...
+  { path: 'employee/:id', component: EmployeeComponent},
+...
+----
+
+[NOTE]
+====
+En el caso de este detalle no añadiremos ningún acceso directo desde el menú. El detalle tiene definida una ruta pero no se llega al detalle desde el menú, sino seleccionando el empleado en el listado
+====
+
+### Añadir al controlador maestro el acceso al detalle
+
+El controlador maestro tiene que proporcionar un método que se encargue de ir al detalle. Ese método tomará como argumento el `id` del empleado a mostrar y creará una ruta válida a partir de él.
+
+[source, typescript]
+----
+...
+export class EmployeesComponent implements OnInit {
+  employees: any[] = [];
+
+  constructor(
+    private employeesService: EmployeesService,
+    private router: Router <1>
+  ) {
+    this.employees = employeesService.getEmployees();
+  }
+
+  showEmployee(id: number) { <2>
+    this.router.navigate(['employee', id]); <3>
+  }
+
+  ngOnInit(): void {}
+}
+----
+<1> Inyección de un objeto `router` que permitirá la navegación a la página de detalle
+<2> Método que implementa el acceso al detalle
+<3> El método `navigate` toma como argumentos un array con la lista de literales y/o parámetros a añadir a la URL para confeccionar la ruta.
+
+
+### Añadir a la vista del maestro el acceso al detalle
+
+Se trata de encerrar entre un hipervínculo el valor mostrado del empleado en el maestro. `routerLink` le dará formato de hipervínculo. Se creará un evento `(click)` para llamar al método implementado en el controlador.
+
+[source, html]
+----
+<div class="row">
+  <div class="col">
+    <ul>
+      <li *ngFor="let employee of employees">
+        <a routerLink="" (click)="showEmployee(employee.id)"> <1>
+          {{ employee.name.first }} {{ employee.name.last }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+----
+<1> `routerLink` hace que tenga estilo de hipervínculo. De la navegación se encarga el método `showEmployee()`, que toma como argumento el `id` del empleado seleccinado.
+
+El resultado será como el de la figura siguiente.
+
+image::listadoEmpleadoConLinks.png[]
+
+### Implementar el controlador de la parte de detalle
+
+El controlador del detalle tiene que tomar el valor del parámetro pasado en la ruta. Los parámetros se reciben en un array denominado `params`. Como en el archivo `app.routes.ts` se definió la ruta `employee/:id` el parámetro se recibe en `params['id']`.
+
+[source, typescript]
+----
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EmployeesService } from '../../services/employees.service';
+
+@Component({
+  selector: 'app-employee',
+  templateUrl: './employee.component.html',
+  styleUrls: ['./employee.component.css'],
+})
+export class EmployeeComponent implements OnInit {
+  employee: any = {}; <1>
+  constructor(
+    private activatedRoute: ActivatedRoute, <2>
+    private employeesService: EmployeesService <3>
+  ) {
+    this.activatedRoute.params.subscribe((params) => { <4>
+      this.employee = this.employeesService.getEmployee(params['id']); <5>
+    });
+  }
+
+  ngOnInit(): void {}
+}
+----
+<1> Variable de instancia para almacenar los datos recuperados por el servicio
+<2> Inyección de la ruta para poder acceder al parámetro proporcionado
+<3> Inyección del servicio para recuperar los detalles del empleado
+<4> Obtener los parámetros. Se usa `subscribe` porque se trata de un https://angular.io/guide/observables[`Observable`] ya que se trata de una recepción asíncrona.
+
+### Implementar la vista de la parte de detalle
+
+La vista presenta los valores almacenados en la variable de instancia `employee`.
+
+[source, html]
+----
+<div class="row">
+  <div class="col">
+    <h2>{{ employee.name.first }} {{ employee.name.last }}</h2> <1>
+    <p>Company: {{ employee.company }}</p>
+    <p>Contact at: {{ employee.email }}</p>
+  </div>
+</div>
+
+----
+<1> Uso de la interpolación para la presentación de datos
+
+El resultado de acceso a un detalle será similar a este.
+
+image::DetalleEmpleado.png[]
+
+## Creación de un servicio sobre una API REST
+
+### Creación del servicio y componente maestro
+
+[source, bash]
+----
+ng g service services/countries
+ng g c components/countries
+----
+
+Añadir el servicio a los providers de `app.module.ts`
+
+[source, typescript]
+----
+...
+  providers: [HeroesService, CountriesService],
+...
+----
+
+### Añadir las rutas
+
+[source, typescript]
+----
+export const ROUTES: Routes = [
+...
+  { path: 'countries', component: CountriesComponent },
+...
+];
+----
+
+### Añadir las nuevas entradas al menú
+
+[source, html]
+----
+...
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="countries">Countries</a>
+      </li>
+...
+----
+
+### Implementación del servicio
+
+[source, typescript]
+----
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CountriesService {
+  constructor(private http: HttpClient) {}
+
+  getQuery(query: string) {
+    const url = `https://restcountries.eu/rest/v2/${query}`;
+
+    return this.http.get(url);
+  }
+
+  getCountries() {
+    return this.getQuery('all');
+  }
+
+  getCountry(country: string) {
+    return this.getQuery(`name/${country}`);
+  }
+}
+----
+
+### Crear el controlador de la parte maestra
+
+[source, typescript]
+----
+import { Component, OnInit } from '@angular/core';
+import { CountriesService } from '../../services/countries.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-countries',
+  templateUrl: './countries.component.html',
+  styleUrls: ['./countries.component.css'],
+})
+export class CountriesComponent implements OnInit {
+  countries: any[] = [];
+
+  constructor(
+    private countriesService: CountriesService,
+    private router: Router
+  ) {
+    this.countriesService.getCountries().subscribe((data: any) => {
+      this.countries = data;
+    });
+  }
+
+
+  ngOnInit(): void {}
+}
+----
+
+### Crear la vista de la parte maestra
+
+[source, typescript]
+----
+<div class="row">
+  <div class="col">
+    <ul>
+      <li *ngFor="let country of countries">
+          <p>{{ country.name }}</p>
+      </li>
+    </ul>
+  </div>
+</div>
+----
+
+### Crear el componente para el detalle
+
+[source, bash]
+----
+ng g c components/country
+----
+
+### Añadir al controlador maestro el acceso al detalle
+
+[source, typescript]
+----
+import { Component, OnInit } from '@angular/core';
+import { CountriesService } from '../../services/countries.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-countries',
+  templateUrl: './countries.component.html',
+  styleUrls: ['./countries.component.css'],
+})
+export class CountriesComponent implements OnInit {
+  countries: any[] = [];
+
+  constructor(
+    private countriesService: CountriesService,
+    private router: Router
+  ) {
+    this.countriesService.getCountries().subscribe((data: any) => {
+      this.countries = data;
+    });
+  }
+
+  verPais(country: string) { <1>
+    this.router.navigate(['/country', country]);
+  }
+  ngOnInit(): void {}
+}
+----
+<1> 
+
+### Añadir a la vista del maestro el acceso al detalle
+
+[source, html]
+----
+<div class="row">
+  <div class="col">
+    <ul>
+      <li *ngFor="let country of countries">
+        <a routerLink="" (click)="verPais(country.name)"> <1>
+          <p>{{ country.name }}</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+----
+<1> `routerLink` hace que tenga estilo de hipervínculo. De la navegación se encarga el método verPais().
+
+### Implementar el controlador de la parte de detalle
+
+[source, typescript]
+----
+import { Component, OnInit } from '@angular/core';
+import { CountriesService } from '../../services/countries.service';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-country',
+  templateUrl: './country.component.html',
+  styleUrls: ['./country.component.css'],
+})
+export class CountryComponent implements OnInit {
+  country: any;
+
+  constructor(
+    private contriesService: CountriesService,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.activatedRoute.params.subscribe((params) => {
+      this.contriesService.getCountry(params['id']).subscribe((data) => {
+        this.country = data[0];
+      });
+    });
+  }
+
+  ngOnInit(): void {}
+}
+----
+
+### Implementar la vista de la parte de detalle
+
+[source, html]
+----
+<div *ngIf="country" class="row">
+  <div class="col">
+    <h2>{{ country.name }}</h2>
+    <p>Population: {{ country.population | number }}</p>
+    <p>Capital: {{ country.capital }}</p>
+    <p>Timezones:</p>
+    <ul>
+      <li *ngFor="let tz of country.timezones; let i = index">
+        {{ country.timezones[i] }}
+      </li>
+    </ul>
+  </div>
+</div>
+----
+
+
