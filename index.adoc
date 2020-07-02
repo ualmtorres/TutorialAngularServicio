@@ -45,6 +45,11 @@ En este tutorial se aborda el desarrollo por etapas de una aplicación maestro d
 * Consumir de servicios de forma asíncrona
 * Presentar datos de los componentes en las vistas
 
+[TIP]
+====
+Disponible el https://github.com/ualmtorres/ejemploAngular[repositorio] usado en este tutorial.
+====
+
 // Entrar en modo numerado de apartados
 :numbered:
 
