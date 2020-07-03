@@ -1074,3 +1074,10 @@ El resultado de acceso a un detalle será similar a este.
 
 
 image::ComentariosPost.png[]
+
+:numbered!: 
+
+
+## Anexo. Relaciones entre componentes, servicios, módulos and so on
+
+image::TodoJunto.png[]
