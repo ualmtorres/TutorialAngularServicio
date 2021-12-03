@@ -119,7 +119,7 @@ La opción que elegiremos para incluir Bootstrap en nuestro proyecto será usarl
 npm install bootstrap jquery @popperjs/core --save
 ----
 
-Incluir en `angular.json` las referencias al CSS y los JS. Esto es equivalente a incluir en el `index.html` el CSS y los JS de Boostrap.
+Incluir en la sección `architect.build` de `angular.json` las referencias al CSS y los JS. Esto es equivalente a incluir en el `index.html` el CSS y los JS de Boostrap.
 
 [source, TypeScript]
 ----
@@ -1058,7 +1058,7 @@ La vista presenta los valores almacenados en la variable de instancia `comments`
         <h5>{{ comment.name }}</h5>
         {{ comment.body }}
         <small>
-          <span class="badge badge-success">
+          <span class="badge bg-success">
             {{ comment.email }}
           </span></small
         >
